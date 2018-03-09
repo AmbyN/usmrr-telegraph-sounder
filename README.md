@@ -8,7 +8,7 @@ The telegraph sounder system for Bernie's layout consists of five train order
 stations connected to the dispatcher's office. At each station, there is a small
 control panel embedded in the layout fascia resembling the image below.
 
-![Station Control Panel]/images/station-panel.png
+![Station Control Panel](images/station-panel.png)
 
 ## User Interface
 
@@ -22,8 +22,8 @@ station platforms will illuminate solidly.
 
 In the dispatcher's office, the telegraph sounder will start thunking away,
 playing the dot code of the train OS report. As a visual indicator of which
-station is calling (and a cheat for the dispatcher),  the station's LED on the
-dispatcher's control panel will also blink out the sounder activity. 
+station is calling (and a cheat for the dispatcher), the active station's LED
+on the dispatcher's control panel will also blink out the sounder activity. 
 
 The sounder will continue to play the OS message until one of the following
 events happens:
@@ -38,12 +38,22 @@ At this point, the station will go back to IDLE and the BUSY lamp will turn off.
 
 The hardware at each station consists of the fascia control panel with the
 rotary switch, BUSY lamp (LED), and "REGULAR" and "EXTRA" push buttons, along
-with a Model Railroad Control Systems "Morse Code Buzzer Board"
-(http://www.modelrailroadcontrolsystems.com/morse-code-buzzer-board/) which uses
-an Arduino Pro-Mini embedded microcontroller. A schematic of the connection of
-the fascia panel to the Morse Code Buzzer Board is shown below:
+with a [Model Railroad Control Systems "Morse Code Buzzer Board"]
+(http://www.modelrailroadcontrolsystems.com/morse-code-buzzer-board/) which
+uses an Arduino Pro-Mini embedded microcontroller. One possible schematic of
+the connection of the fascia panel to the Morse Code Buzzer Board is shown
+below:
 
 [insert schematic here]
+
+In this schematic, the interface between each station board and the dispatcher's
+office requires 5 signals:
+
+  * Vsounder -- the sounder power supply voltage
+  * GND -- the sounder power supply ground
+  * SOUNDER_OUT_L -- an active-low, open collector output to drive the sounder
+  * BUSY_OUT_L -- an active-low, open collector output to be wire-ORed in the dispatcher's office and pulled high to Vsounder
+  * STOP_IN_L -- an active-low digital input from a normally open push button in the dispatcher's office that connects to GND when pressed.
 
 In the dispatcher's office, all of the "SOUNDER_OUT_L" lines from the stations
 are connected to the vintage telegraph sounder through a diode stack with an LED
@@ -60,15 +70,40 @@ go low to signal that the line is busy.
 
 [insert dispatcher schematic here]
 
+Back at the station board, We know that the two outputs to the dispatcher
+(SOUNDER_OUT_L and BUSY_OUT_L) should be driven from the higher current
+capacity "LOAD" outputs. We also know that we need one more output to drive the
+local "BUSY" LED on the fascia. All of these outputs can come from the "load"
+pins, but the LED can be driven by one of the "START" or "STOP" pins as well.
+
+There are also 4 input signals we must have:
+
+  * REGULAR_IN_L -- from the "REGULAR" button on the fascia panel
+  * EXTRA_IN_L -- from the "EXTRA" button on the fascia panel
+  * STOP_IN_L -- from the dispatcher
+  * BUSY_IN_L -- looped over from the BUSY_OUT_L to allow us to know when a different station is busy
+
+Assuming that we place all of the "must be output" pins on the LOAD connector
+which can *only* be outputs, then we are left with only 14 pins which are
+capable of being inputs, and 4 of those are spoken for.  That leaves us with a
+total of 10 more pins on the Arduino which can be used as inputs, and we are
+trying to have 12 trains on the selector knob.
+
+In the schematic, we have chosen to "turn things around" and instead of trying
+to have the train selector be multiple *inputs*, we tie the multiple train
+selector to 12 *output* pins of the Arduino and use a simple scanning loop to
+pull each output pin low in a cycle to see which one shows up as a low voltage
+at the single "TRAIN" input.
+
 ## Software
 
 The software has been designed around a simple state machine as pictured below.
 
-![Station State Machine]/images/state-machine.png
+![Station State Machine](images/state-machine.png)
 
 At power-on, each station will enter the ST_IDLE state, de-asserting the
-BUSY_OUT_L and SOUNDER_L and extinguishing the local BUSY lamp on the fascia
-panel. 
+BUSY_OUT_L and SOUNDER_OUT_L and extinguishing the local BUSY lamp on the
+fascia panel. 
 
 ### OSing a Train
 
@@ -93,3 +128,4 @@ play until one of the following occurs:
 While this happens, all of the other station panels will see their BUSY_IN_L
 signal asserted low and will prevent operators at those stations from starting
 another train report.
+
