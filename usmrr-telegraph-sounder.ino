@@ -69,6 +69,7 @@ static const TrainSelectorOutputPin output_pins[] = {
   { START_5,  OUTPUT_NORMAL,   "9" },
   { START_4,  OUTPUT_NORMAL,  "10" },
   { START_3,  OUTPUT_NORMAL,  "11" },
+  { START_2,  OUTPUT_NORMAL,  "12" },
 };
 constexpr uint8_t TRAIN_IN_L = STOP_4;
 

@@ -25,8 +25,8 @@ constexpr uint8_t LOAD_3 = 11;
 constexpr uint8_t LOAD_4 = 10;
 constexpr uint8_t LOAD_5 =  9;
 constexpr uint8_t LOAD_6 =  8;
-constexpr uint8_t LOAD_7 =  1;
-constexpr uint8_t LOAD_8 =  0;
+constexpr uint8_t LOAD_7 =  0; // labeled RX1
+constexpr uint8_t LOAD_8 =  1; // labeled TX0
 
 constexpr uint8_t START_1 = A6;
 constexpr uint8_t START_2 =  7;

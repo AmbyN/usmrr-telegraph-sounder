@@ -1,0 +1,59 @@
+@startuml
+scale 600 height
+
+title USMRR Telegraph Station
+[*] --> ON
+state ON {
+  [*] --> ENTRY
+  
+  state ENTRY
+  ENTRY --> SETUP : Invalid Settings || REGULAR || EXTRA
+  ENTRY --> IDLE : Valid settings
+
+  state IDLE
+  IDLE : No lights are on
+  IDLE : Sounder is quiet
+  IDLE : Scanning TRAIN input
+  
+  state SOUNDING
+  SOUNDING: Station OS message is playing
+  SOUNDING: Local BUSY light blinks dot code
+  SOUNDING: Remote BUSY lights flash
+  
+  
+  state BUSY {
+    [*] --> LAMP_ON
+    state LAMP_ON
+    state LAMP_OFF
+    LAMP_ON -r-> LAMP_OFF : TIMER
+    LAMP_OFF -l-> LAMP_ON : TIMER
+  }
+
+  state SETUP {
+    [*] --> ERROR
+    state ERROR
+    state VALID
+    ERROR --> VALID : 1 <= TRAIN <= 5
+    VALID --> ERROR : TRAIN > 5
+    VALID -l-> IDLE : REGULAR || EXTRA
+  }
+  
+  state AMBIANCE
+  AMBIANCE: Backgroun "ambiance" message is playing
+  AMBIANCE: Local BUSY light blinks dot code
+  AMBIANCE: Remote BUSY lights flash
+
+  IDLE --> AMBIANCE : Ambiance timer expiry
+  AMBIANCE --> IDLE : Message complete
+  
+  IDLE -up-> SOUNDING : REGULAR || EXTRA
+  SOUNDING -down-> IDLE : STOP_IN || REGULAR || EXTRA || TRAIN
+  
+  IDLE --> BUSY : BUSY_IN
+  BUSY --> IDLE : ~BUSY_IN
+
+
+  
+}
+
+@enduml

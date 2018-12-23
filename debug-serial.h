@@ -18,10 +18,11 @@
 #include <Arduino.h>
 
 // This header file allows enabling or disabling all of the Serial.print() and Serial.println() calls
-// in the station_buzzers sketch by whichever of the following two #define/#undef lines is *last*
-#undef WANT_REAL_SERIAL
+// in the station_buzzers sketch by whichever of the following two #define/#undef lines is *last*.
+// Note, on the Arduino pro-micro, enabling WANT_REAL_SERIAL will cause stations 5 and 6 of the
+// train selector to misbehave.
 #define WANT_REAL_SERIAL
-
+#undef WANT_REAL_SERIAL
 
 // The 32u4 based Leonardo boards have "Serial" defined in a way that communicates directly over USB
 // and leaves the D0/D1 pins completely available.
