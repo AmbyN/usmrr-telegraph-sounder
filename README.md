@@ -96,7 +96,7 @@ to see which one shows up as a low voltage at the single "TRAIN" input.
 
 The software has been designed around a simple state machine as pictured below.
 
-![Station State Machine](images/statioin-state-machine.svg)
+![Station State Machine](images/station-state-machine.svg)
 
 At power-on, each station will enter the ST\_IDLE state, de-asserting the BUSY\_OUT\_L and
 SOUNDER\_OUT\_L and extinguishing the local BUSY lamp on the fascia panel.
