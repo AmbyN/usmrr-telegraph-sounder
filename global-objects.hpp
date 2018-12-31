@@ -50,7 +50,7 @@ extern TrainSelector train_selector;
 
 // SimpleTimer implements a one-deep timer event for the state machine.
 class SimpleTimer {
-    unsigned m_duration;
+    unsigned long m_duration;
     unsigned long m_ref_millis;
   public:
     SimpleTimer() : m_duration(0) {}
@@ -64,7 +64,7 @@ class SimpleTimer {
       }
       return false;
     }
-    void arm(unsigned duration) {
+    void arm(unsigned long duration) {
       m_duration = duration;
       m_ref_millis = millis();
     }

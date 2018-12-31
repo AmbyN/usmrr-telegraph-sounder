@@ -88,14 +88,6 @@ bool busy_follows_sounder = false;
 
 void setup()
 {
-  // Read the unattached A7 input pin a few times to get a random seed.
-  long seed = 0;
-  while(millis() < 2000) {
-    seed = seed << 4;
-    seed |= analogRead(A7);
-    delay(seed & 0x7f);
-  }
-  randomSeed(seed);
   DebugSerial_begin(9600);
   DebugSerial_println(F("USMRR Aquia Line Telegraph Sounder v1.0"));
 
@@ -116,6 +108,14 @@ void setup()
   if (regular_button.pressed() || extra_button.pressed()) {
     valid_settings = false;
   }
+
+  // Use the station settings to set a random seed.
+  long seed = 0;
+  for (size_t ii = 0; ii < sizeof(settings) ; ii++) {
+    seed = seed << 4;
+    seed |= ((const unsigned char *)&settings)[ii];
+  }
+  randomSeed(seed);
   state_machine.setup(valid_settings);
 }
 

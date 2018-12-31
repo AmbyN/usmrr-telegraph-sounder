@@ -70,9 +70,10 @@ stnext on(int signal, void *param) {
       DebugSerial_println("on::entry");
       if (settings.m_station == 0) {
         // Arm the ambiance timer
-        const long base_interval = 25L * 60L * 1000L;
+        const long base_interval = 5L * 60L * 1000L;
         const long random_variance = 10L * 60L * 1000L;
         timer_events[0].arm(base_interval + random(0, random_variance));
+        ambiance_timer_expired = false;
       }
 
       return stnone;
@@ -149,6 +150,7 @@ stnext idle(int signal, void *param) {
           // Setup the message here while we know which button was pressed.
           strcpy(gl_message, "WWW OS ~");
           strcat(gl_message, station_names[settings.m_station]);
+          strcat(gl_message, " ");
           if (signal == SIG_EXTRA) {
             strcat(gl_message, "E");
           }
