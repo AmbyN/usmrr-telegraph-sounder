@@ -153,9 +153,9 @@ Train Selector | Station Code | Station Name
 --------------|--------------|----------------
 1 | AQ (11.2122) | Aquia Landing
 2 | BR (1221.122) | Brooke
-3 | PO (2121.12) | Potomac
-4 | ST (121.1) | Stanaford
-5 | FA (1112.11) | Fallbrook
+3 | PO (2121.12) | Potomac Creek
+4 | ST (121.1) | Stoneman's
+5 | FA (1112.11) | Falmouth
 
 As the train selector is move to these positions, the Arduino will sound the message "I AM
 xx" (2.3.11.2112.3.xx.xx.333) to confirm the setting. When you have the correct station
@@ -173,5 +173,5 @@ as follows:
 6) release the button
 7) twist the train selector knob to the correct station
 8) confirm the "I AM xx" message
-9) press and hold either REFULAR or EXTRA button until the flashing stops.
+9) press and hold either REGULAR or EXTRA button until the flashing stops.
 
